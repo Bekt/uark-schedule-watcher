@@ -7,10 +7,12 @@
   <link href="http://maxcdn.bootstrapcdn.com/bootswatch/3.3.1/paper/bootstrap.min.css" rel="stylesheet">
   <style>
     .container {
-      padding: 20px 0;
       font-size: 15px;
+      margin: 15px auto;
+      max-width: 800px;
     }
-    .panel-title { font-size: 30px;}
+    .panel-title { font-size: 30px; }
+    .font-lg { font-size: 18px; }
   </style>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.2/modernizr.min.js" type="text/javascript"></script>
 </head>
@@ -18,43 +20,55 @@
 <body ng-app="App" ng-controller="Ctrl">
   <div class="container">
     <div class="row">
-      <div class="col-lg-6 col-lg-offset-3">
+    <div class="col-lg-12">
 
       <div class="panel panel-primary">
         <div class="panel-heading panel-title">
           Watch a Course
         </div>
         <div class="panel-body">
-          <p class="lead">When you watch a course, you will immidiately get notified when 
+          <p class="font-lg">When you watch a course, you will immidiately get notified when 
           a course status becomes <strong>Open</strong>.</p>
 
-          <form class="form-horizontal">
+          <form class="form-horizontal" ng-submit="submit(email, course, term)">
             <div class="form-group">
                <label for="email" class="col-lg-4 control-label">UArk Email</label>
                <div class="col-lg-8">
-                 <input type="email" class="form-control" name="email" placeholder="me@uark.edu">
+                 <input type="email" class="form-control" name="email" placeholder="me@uark.edu"
+                        ng-model="email">
                </div>
              </div>
             <div class="form-group">
-               <label for="course" class="col-lg-4 control-label">Course #</label>
+               <label for="course" class="col-lg-4 control-label">
+                 Class # (<a href="#faq">?</a>)</label>
                <div class="col-lg-8">
-                 <input type="number" class="form-control" name="course" placeholder="1234">
+                 <input type="number" class="form-control" name="course" placeholder="1234"
+                        ng-model="course">
                </div>
             </div>
             <div class="form-group">
                 <label for="semester" class="col-lg-4 control-label">Semester</label>
                 <div class="col-lg-8">
-                  <select class="form-control" name="semester">
+                  <select class="form-control" name="semester" ng-model="term">
                     <option>Spring 2015</option>
                   </select>
                 </div>
             </div>
             <div class="form-group">
                <div class="col-lg-8 col-lg-offset-4">
-                  <button class="btn btn-primary btn-lg">Get Notified</button>
+                  <button type="submit "class="btn btn-primary btn-lg" ng-disabled="loading">
+                    Get Notified</button>
                </div>
             </div>
           </form>
+
+          <div class="alert alert-warning text-center" ng-if="ok === false">
+            {{ error_message }}
+          </div>
+          <div class="alert alert-success text-center" ng-if="ok">
+            Success. Keep an eye on for the email.
+          </div>
+
         </div>
       </div>
 
@@ -67,7 +81,7 @@
           The service notifies the students whenever a course status
           changes from full/waitlist/closed to open.
           </p>
-          <p>Feel free to reach out to me (Kanat Bekt) at <i>bekt17+usn[at]gmail.com</i>
+          <p>Feel free to reach out to me (Kanat Bekt) at <i>bekt17+usw[at]gmail.com</i>
           with any questions or concerns.
           The source code of the entire app is available
           <a href="https://github.com/Bekt/uark-schedule-watcher">here</a>.
@@ -75,11 +89,12 @@
         </div>
       </div>
 
-      <div class="panel panel-default">
+      <div class="panel panel-default" id="faq">
         <div class="panel-heading panel-title">FAQ</div>
         <div class="panel-body">
-          <h5>How do I get the course number?</h5>
-          ISIS or here.
+          <h5>How do I get the class number?</h5>
+          On ISIS (<a href="http://i.imgur.com/g6aP55q.png">picture</a>) or on 
+          scheduleofclasses.uark.edu (<a href="http://i.imgur.com/CDfSKuO.png">picture</a>).
           <h5>Can I watch multiple sections of a course?</h5>
           Yes, but you need to fill out the above form for each course section.
           <h5>How does this work?</h5>
@@ -87,8 +102,22 @@
           few minutes, and notifies you by email if the course status changes to
           Open. If you wish to watch the same course even after the email has been
           sent to you, you need to come back this page and fill out the above form again.
+          <h5>Why did I not receive an email even though ISIS shows the course
+          is now open?</h5>
+          Two reasons:
+          <ul>
+            <li>You entered your email or course number incorrectly, or the the
+            email went to your spam folder.</li>
+            <li>
+              scheduleofclasses.uark.edu might have changed its layout. As a result,
+              this service cannot correctly parse page content. Please shoot me an
+              email if you think this is the case.
+            </li>
+          </ul>
           <h5>The semesters list is out of date!</h5>
-          k
+          The semester list has to be updated manually every semester. If the list is out of date,
+          please send me an email or file an 
+          <a href="https://github.com/Bekt/uark-schedule-watcher/issues">issue</a>.
           <h5>Is this legal?</h5>
           Yes.
         </div>
@@ -97,5 +126,28 @@
     </div>
     </div>
   </div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+  <script>
+      angular.module('App', [])
+             .controller('Ctrl', ['$scope', '$http', function ($scope, $http) {
+               $scope.loading = false;
+
+               $scope.submit = function (email, course, term) {
+                    $scope.loading = true;
+                    $http.post('/watch', {email: email, course: course, term: term})
+                    .success(function (data, status) {
+                        $scope.ok = true;
+                        $scope.loading = false;
+                    })
+                    .error(function (data, status) {
+                        $scope.ok = false;
+                        $scope.loading = false;
+                        $scope.error_message = data.message || 'There was an error, please try again.';
+                    });
+                };
+
+             }]);
+  </script>
 </body>
 </html>
