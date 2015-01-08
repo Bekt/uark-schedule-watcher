@@ -81,7 +81,9 @@ def _parse_course(soup, class_num):
 def _notify(watcher, course):
     date = '{:%m/%d/%Y %I:%M %p}'.format(_centralnow())
     course_name = course.get('CourseID', '(Oops)')
-    message = _email_tmpl().format(date, course)
+    message = _email_tmpl().format(date=date,
+                                   course_name=course_name,
+                                   class_num=course.get('ClassNumber'))
     mail.send_mail(sender='UArk Schedule Watcher <bekt17@gmail.com>',
                    to=watcher.email,
                    subject='Course Open: %s' % course_name,
@@ -96,7 +98,7 @@ def _email_tmpl():
     msg = """
 Hey, you are receiving this email because you signed up at http://usw.bekt.net
 
-Just a heads up that as of {}, {} is now OPEN.
+Just a heads up that as of {date}, {course_name} (class number: {class_num}) is now OPEN.
 
 Cheers!"""
     return msg

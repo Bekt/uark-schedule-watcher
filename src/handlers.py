@@ -15,7 +15,7 @@ class AppHandler(webapp2.RequestHandler):
         class_num = str(req.get('course', ''))
         term = 1153  # lol
         # term = req.get('term')
-        if (EMAIL_RE.match(email) is None or 
+        if (EMAIL_RE.match(email) is None or
                 not email.endswith('uark.edu')):
             logging.error('Email invalid: {}'.format(email))
             self.write_json({'message': 'Invalid @uark email.'}, 400)
