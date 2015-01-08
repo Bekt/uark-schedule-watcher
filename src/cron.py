@@ -94,7 +94,7 @@ def _centralnow():
 
 def _email_tmpl():
     msg = """
-Hey, you are receiving this email because you signed up at bekt.net.
+Hey, you are receiving this email because you signed up at http://usw.bekt.net
 
 Just a heads up that as of {}, {} is now OPEN.
 
