@@ -8,7 +8,7 @@ open.
 ## Live
 http://usw.bekt.net
 
-![](https://cloud.githubusercontent.com/assets/1221480/5658001/2ca5acb8-96bf-11e4-8780-661b288f9d3b.png)
+![](https://cloud.githubusercontent.com/assets/1221480/5658631/a9b8d03a-96ca-11e4-8a14-6b7a54fce8e3.png)
 
 ## Development
 ### Requirements
