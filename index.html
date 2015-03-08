@@ -56,7 +56,7 @@
             </div>
             <div class="form-group">
                <div class="col-lg-8 col-lg-offset-4">
-                  <button type="submit "class="btn btn-primary btn-lg" ng-disabled="loading || ok === false">
+                  <button type="submit "class="btn btn-primary btn-lg" ng-disabled="loading">
                     Get Notified</button>
                </div>
             </div>
@@ -151,6 +151,8 @@
 
                $scope.submit = function (email, course, term) {
                     $scope.loading = true;
+                    $scope.ok = null;
+
                     $http.post('/watch', {email: email, course: course, term: term})
                     .success(function (data, status) {
                         $scope.ok = true;
