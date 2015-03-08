@@ -31,6 +31,7 @@ class CronHandler(webapp2.RequestHandler):
         course = _parse_course(soup, watcher.class_num)
         if not course:
             logging.warning('Invalid course number: %s' % watcher.class_num)
+            logging.warning(soup.text)
             _disable_watcher(watcher)
             return
         if course.get('Status') != 'Open':
