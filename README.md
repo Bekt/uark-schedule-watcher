@@ -1,4 +1,5 @@
-## UArk Schedule Watcher
+## UArk Schedule Watcher [![](https://circleci.com/gh/Bekt/uark-schedule-watcher.svg?style=svg)](https://circleci.com/gh/Bekt/uark-schedule-watcher)
+
 **UArk Schedule Watcher** is designed to help students at the University of
 Arkansas, Fayetteville with course sign-ups. Students no longer have to
 check ISIS for course availability manually. The service notifies the

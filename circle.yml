@@ -1,0 +1,30 @@
+# Continuous deployment with CircleCI.
+
+machine:
+  python:
+    version: 2.7.10
+  environment:
+    GCLOUD: /opt/google-cloud-sdk/bin
+
+
+dependencies:
+  override:
+    - pip install -t lib/ -r requirements.txt
+    - sudo $GCLOUD/gcloud --quiet components update app-engine-python
+
+
+test:
+  pre:
+    - sudo $GCLOUD/dev_appserver.py .:
+        background: true
+    - sleep 5
+  override:
+    - curl --retry 2 --retry-delay 5 --fail -i "http://localhost:8080/terms"
+
+
+deployment:
+  main:
+    branch: master
+    commands:
+      - sudo $GCLOUD/gcloud auth activate-refresh-token $GCLOUD_EMAIL_PERSONAL $GCLOUD_TOKEN_PERSONAL
+      - sudo $GCLOUD/gcloud --quiet preview app deploy app.yaml --promote --project=uark-notifier --version=0-1
