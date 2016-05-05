@@ -8,8 +8,10 @@ EMAIL_RE = re.compile(r'[^@]+@[^@]+\.[^@]+')
 
 active_terms = [{'code': t[0], 'name': t[1]}
                 for t in [
-                    (1161, 'January Intersession 2016'),
-                    (1163, 'Spring 2016'),
+                    (1164, 'Summer Intersession 2016'),
+                    (1166, 'Summer 2016'),
+                    (1167, 'Fall Intersession 2016'),
+                    (1169, 'Fall 2016')
                     ]]
 
 
